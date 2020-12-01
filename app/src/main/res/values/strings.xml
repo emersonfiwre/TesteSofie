@@ -3,10 +3,18 @@
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+
+    <string name="ERROR_UNEXPECTED">Um erro inesperado ocorreu. Tente novamente mais tarde.</string>
+    <string name="ERROR_LOAD_TASK">Erro ao carregar a tarefa.</string>
+    <string name="ERROR_INTERNET_CONNECTION">Conexão à internet necessária para uso da applicação.</string>
+
+    <!--labels-->
+    <string name="all_tasks">Tarefas</string>
+    <string name="name_tasks">Nome da Tarefa</string>
+    <string name="desc_tasks">Descrição da Tarefa</string>
+    <string name="email">email</string>
+
 </resources>
