@@ -7,7 +7,5 @@ interface TaskListener {
     /**
      * Click para inserção
      */
-    fun onSaveClick(id: TaskModel)
-
-
+    fun onSaveClick(task: TaskModel)
 }
