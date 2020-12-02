@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +37,11 @@ class TasksFragment : Fragment() {
         return mViewRoot
     }
 
+    override fun onResume() {
+        mViewModel.list()
+        super.onResume()
+    }
+
     private fun setupRecycler() {
         mViewRoot.recycler_tasks?.let {
             it.layoutManager = LinearLayoutManager(activity)
@@ -47,6 +53,11 @@ class TasksFragment : Fragment() {
     private fun observe() {
         mViewModel.taskList.observe(viewLifecycleOwner, Observer {
             mAdapter.notifyChanged(it)
+        })
+        mViewModel.validation.observe(viewLifecycleOwner, Observer {
+            if (!it.success()) {
+                Toast.makeText(context, it.failure(), Toast.LENGTH_LONG).show()
+            }
         })
     }
 

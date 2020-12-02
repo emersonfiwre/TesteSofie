@@ -15,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class TaskRepository(val mContext: Context) {
+class TaskRepository(val mContext: Context) : ValidationRepository() {
     companion object {
         private const val TAG = "TaskRepositoryError"
     }
@@ -23,6 +23,10 @@ class TaskRepository(val mContext: Context) {
     private val mRemote = RetrofitClient.createService(TaskService::class.java)
 
     fun listTasks(listener: APIListener<List<TaskModel>>) {
+        if (!isConnectionAvailable(mContext)) {
+            listener.onFailure(mContext.getString(R.string.ERROR_INTERNET_CONNECTION))
+            return
+        }
         val call: Call<TaskListModel> = mRemote.all()
         call.enqueue(object : Callback<TaskListModel> {
             override fun onResponse(call: Call<TaskListModel>, response: Response<TaskListModel>) {
@@ -37,7 +41,6 @@ class TaskRepository(val mContext: Context) {
 
             override fun onFailure(call: Call<TaskListModel>, t: Throwable) {
                 t.printStackTrace()
-
                 Log.e(TAG, t.message.toString())
                 listener.onFailure(mContext.getString(R.string.ERROR_UNEXPECTED))
             }
@@ -45,6 +48,10 @@ class TaskRepository(val mContext: Context) {
     }
 
     fun create(task: TaskModel, listener: APIListener<Boolean>) {
+        if (!isConnectionAvailable(mContext)) {
+            listener.onFailure(mContext.getString(R.string.ERROR_INTERNET_CONNECTION))
+            return
+        }
         val call: Call<TaskCreateModel> = mRemote.create(task)
         call.enqueue(object : Callback<TaskCreateModel> {
             override fun onResponse(
@@ -67,7 +74,6 @@ class TaskRepository(val mContext: Context) {
                 }
 
             }
-
             override fun onFailure(call: Call<TaskCreateModel>, t: Throwable) {
                 t.printStackTrace()
                 Log.e(TAG, t.message.toString())

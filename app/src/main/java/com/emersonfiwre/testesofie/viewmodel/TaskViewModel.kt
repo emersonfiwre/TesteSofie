@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.emersonfiwre.testesofie.service.listener.APIListener
+import com.emersonfiwre.testesofie.service.listener.ValidationListener
 import com.emersonfiwre.testesofie.service.model.TaskModel
 import com.emersonfiwre.testesofie.service.repository.TaskRepository
 
@@ -16,8 +17,11 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
     private val mTaskList = MutableLiveData<List<TaskModel>>()
     val taskList: LiveData<List<TaskModel>> = mTaskList
 
-    private val mTaskSave = MutableLiveData<Boolean>()
-    val taskSave: LiveData<Boolean> = mTaskSave
+    //private val mTaskSave = MutableLiveData<Boolean>()
+    //val taskSave: LiveData<Boolean> = mTaskSave
+
+    private val mValidation = MutableLiveData<ValidationListener>()
+    val validation: LiveData<ValidationListener> = mValidation
 
     fun list() {
         mRepository.listTasks(object : APIListener<List<TaskModel>> {
@@ -27,7 +31,7 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
             override fun onFailure(message: String) {
                 mTaskList.value = arrayListOf()
-
+                mValidation.value = ValidationListener(message)
             }
         })
     }
@@ -35,12 +39,19 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
     fun save(email: String?, taskName: String?, desc: String?) {
         //mValidation.value = ValidationListener(message)
         if (email == null || email.isEmpty()) {
+            mValidation.value = ValidationListener("email está vazio")
+            return
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            mValidation.value = ValidationListener("Adicione um email válido")
             return
         }
         if (taskName == null || taskName.isEmpty()) {
+            mValidation.value = ValidationListener("Nome da tarefa está vazio")
             return
         }
         if (desc == null || desc.isEmpty()) {
+            mValidation.value = ValidationListener("Descrição está vazio")
             return
         }
         val task = TaskModel().apply {
@@ -51,11 +62,11 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
         mRepository.create(task, object : APIListener<Boolean> {
             override fun onSuccess(result: Boolean) {
-                mTaskSave.value = result
+                mValidation.value = ValidationListener()
             }
 
             override fun onFailure(message: String) {
-                mTaskSave.value = false
+                mValidation.value = ValidationListener(message)
             }
         })
     }

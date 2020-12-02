@@ -28,13 +28,11 @@ class CreateTaskActivity : AppCompatActivity() {
     }
 
     private fun observe() {
-        mViewModel.taskSave.observe(this, Observer {
-            if (it) {
-                Snackbar.make(currentFocus!!, "Salvo com sucesso", Snackbar.LENGTH_SHORT)
-                    .setAction("Action", null).show()
+        mViewModel.validation.observe(this, Observer {
+            if (it.success()) {
+                Toast.makeText(this, "Tarefa adicionada com sucesso", Toast.LENGTH_SHORT).show()
             } else {
-                Snackbar.make(currentFocus!!, "Falha ao salvar", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+                Toast.makeText(this, it.failure(), Toast.LENGTH_SHORT).show()
             }
         })
     }
