@@ -5,4 +5,7 @@ class TaskConstants private constructor(){
         const val SUCCESS = 200
         const val CREATED = 201
     }
+    object HEADER {
+        const val CONTENT_TYPE = "Content-Type"
+    }
 }

@@ -9,5 +9,7 @@
         android:id="@+id/Tasksragment"
         android:name="com.emersonfiwre.testesofie.view.TasksFragment"
         android:label="@string/tasks_fragment_label"
-        tools:layout="@layout/fragment_tasks" />
+        tools:layout="@layout/fragment_tasks">
+    </fragment>
+
 </navigation>

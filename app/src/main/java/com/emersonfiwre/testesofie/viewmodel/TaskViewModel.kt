@@ -16,6 +16,9 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
     private val mTaskList = MutableLiveData<List<TaskModel>>()
     val taskList: LiveData<List<TaskModel>> = mTaskList
 
+    private val mTaskSave = MutableLiveData<Boolean>()
+    val taskSave: LiveData<Boolean> = mTaskSave
+
     fun list() {
         mRepository.listTasks(object : APIListener<List<TaskModel>> {
             override fun onSuccess(result: List<TaskModel>) {
@@ -23,12 +26,37 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onFailure(message: String) {
-                val s =""
                 mTaskList.value = arrayListOf()
 
-                //mValidation.value = ValidationListener(message)
             }
         })
+    }
 
+    fun save(email: String?, taskName: String?, desc: String?) {
+        //mValidation.value = ValidationListener(message)
+        if (email == null || email.isEmpty()) {
+            return
+        }
+        if (taskName == null || taskName.isEmpty()) {
+            return
+        }
+        if (desc == null || desc.isEmpty()) {
+            return
+        }
+        val task = TaskModel().apply {
+            this.email = email
+            this.description = desc
+            this.title = taskName
+        }
+
+        mRepository.create(task, object : APIListener<Boolean> {
+            override fun onSuccess(result: Boolean) {
+                mTaskSave.value = result
+            }
+
+            override fun onFailure(message: String) {
+                mTaskSave.value = false
+            }
+        })
     }
 }

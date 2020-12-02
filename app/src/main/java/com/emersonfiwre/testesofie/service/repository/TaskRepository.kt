@@ -37,20 +37,20 @@ class TaskRepository(val mContext: Context) {
 
             override fun onFailure(call: Call<TaskListModel>, t: Throwable) {
                 t.printStackTrace()
+
                 Log.e(TAG, t.message.toString())
                 listener.onFailure(mContext.getString(R.string.ERROR_UNEXPECTED))
             }
         })
     }
 
-    fun create(task: TaskModel, listener: APIListener<TaskModel>) {
-        val call: Call<TaskCreateModel> = mRemote.create(
-            task.title,
-            task.description,
-            task.email
-        )
+    fun create(task: TaskModel, listener: APIListener<Boolean>) {
+        val call: Call<TaskCreateModel> = mRemote.create(task)
         call.enqueue(object : Callback<TaskCreateModel> {
-            override fun onResponse(call: Call<TaskCreateModel>, response: Response<TaskCreateModel>) {
+            override fun onResponse(
+                call: Call<TaskCreateModel>,
+                response: Response<TaskCreateModel>
+            ) {
                 val code = response.code()
                 if (code != TaskConstants.HTTP.CREATED) {
                     val validation =
@@ -60,7 +60,7 @@ class TaskRepository(val mContext: Context) {
                 }
                 response.body()?.let {
                     if (it.success) {
-                        listener.onSuccess(it.task)
+                        listener.onSuccess(it.success)
                     } else {
                         listener.onFailure(mContext.getString(R.string.ERROR_CREATED))
                     }

@@ -3,7 +3,7 @@ package com.emersonfiwre.testesofie.service.model
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
-class TaskModel {
+class TaskModel() {
 
     @SerializedName("_id")
     var id: String = ""
@@ -15,7 +15,7 @@ class TaskModel {
     lateinit var email: String
 
     @SerializedName("when")
-    lateinit var whenDate: String
+    var whenDate: String = ""
 
     @SerializedName("title")
     lateinit var title: String

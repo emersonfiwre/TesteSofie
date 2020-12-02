@@ -16,5 +16,6 @@
     <string name="save">save</string>
     <string name="cancel">cancel</string>
     <string name="tasks_fragment_label">Tasks Fragment</string>
+    <string name="create_task_activity">Create Task Activity</string>
 
 </resources>
