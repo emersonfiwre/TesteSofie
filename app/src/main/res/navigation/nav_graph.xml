@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/Tasksragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.emersonfiwre.testesofie.view.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first" />
+        android:id="@+id/Tasksragment"
+        android:name="com.emersonfiwre.testesofie.view.TasksFragment"
+        android:label="@string/tasks_fragment_label"
+        tools:layout="@layout/fragment_tasks" />
 </navigation>

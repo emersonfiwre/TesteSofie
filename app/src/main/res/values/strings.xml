@@ -1,20 +1,20 @@
 <resources>
     <string name="app_name">Sofie</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="next">Next</string>
-    <string name="hello_first_fragment">Hello first fragment</string>
 
-
+    <!-- Errors -->
     <string name="ERROR_UNEXPECTED">Um erro inesperado ocorreu. Tente novamente mais tarde.</string>
     <string name="ERROR_LOAD_TASK">Erro ao carregar a tarefa.</string>
     <string name="ERROR_INTERNET_CONNECTION">Conexão à internet necessária para uso da applicação.</string>
+    <string name="ERROR_CREATED">Não foi possível salvar sua tarefa. Por favor, tente novamente mais tarde.</string>
 
     <!--labels-->
     <string name="all_tasks">Tarefas</string>
+    <string name="new_task">Nova Tarefa</string>
     <string name="name_tasks">Nome da Tarefa</string>
     <string name="desc_tasks">Descrição da Tarefa</string>
     <string name="email">email</string>
+    <string name="save">save</string>
+    <string name="cancel">cancel</string>
+    <string name="tasks_fragment_label">Tasks Fragment</string>
 
 </resources>

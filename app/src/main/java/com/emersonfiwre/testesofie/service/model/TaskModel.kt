@@ -15,7 +15,7 @@ class TaskModel {
     lateinit var email: String
 
     @SerializedName("when")
-    lateinit var whenDate: Date
+    lateinit var whenDate: String
 
     @SerializedName("title")
     lateinit var title: String
