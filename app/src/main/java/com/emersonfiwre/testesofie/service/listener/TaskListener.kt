@@ -5,7 +5,12 @@ import com.emersonfiwre.testesofie.service.model.TaskModel
 interface TaskListener {
 
     /**
-     * Click para inserção
+     * Click para atualizacao
      */
-    fun onSaveClick(task: TaskModel)
+    fun onItemClick(task: TaskModel)
+
+    /**
+     * Remoção
+     */
+    fun onDeleteClick(id: String)
 }

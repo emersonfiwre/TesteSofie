@@ -36,38 +36,47 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
-    fun save(email: String?, taskName: String?, desc: String?) {
+    fun save(task: TaskModel) {
         //mValidation.value = ValidationListener(message)
-        if (email == null || email.isEmpty()) {
+        if (task.email.isEmpty()) {
             mValidation.value = ValidationListener("email está vazio")
             return
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(task.email).matches()) {
             mValidation.value = ValidationListener("Adicione um email válido")
             return
         }
-        if (taskName == null || taskName.isEmpty()) {
+        if (task.title.isEmpty()) {
             mValidation.value = ValidationListener("Nome da tarefa está vazio")
             return
         }
-        if (desc == null || desc.isEmpty()) {
+        if (task.description.isEmpty()) {
             mValidation.value = ValidationListener("Descrição está vazio")
             return
         }
-        val task = TaskModel().apply {
-            this.email = email
-            this.description = desc
-            this.title = taskName
+        if (task.id.isEmpty()) {
+
+            mRepository.create(task, object : APIListener<Boolean> {
+                override fun onSuccess(result: Boolean) {
+                    mValidation.value = ValidationListener()
+                }
+
+                override fun onFailure(message: String) {
+                    mValidation.value = ValidationListener(message)
+                }
+            })
+        } else {
+            mRepository.update(task, object : APIListener<Boolean> {
+                override fun onSuccess(result: Boolean) {
+                    mValidation.value = ValidationListener()
+                }
+
+                override fun onFailure(message: String) {
+                    mValidation.value = ValidationListener(message)
+                }
+
+            })
+
         }
-
-        mRepository.create(task, object : APIListener<Boolean> {
-            override fun onSuccess(result: Boolean) {
-                mValidation.value = ValidationListener()
-            }
-
-            override fun onFailure(message: String) {
-                mValidation.value = ValidationListener(message)
-            }
-        })
     }
 }

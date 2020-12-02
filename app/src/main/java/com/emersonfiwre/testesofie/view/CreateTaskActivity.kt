@@ -8,12 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.emersonfiwre.testesofie.R
+import com.emersonfiwre.testesofie.service.constants.TaskConstants
+import com.emersonfiwre.testesofie.service.model.TaskModel
 import com.emersonfiwre.testesofie.viewmodel.TaskViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_create_task.*
 
 class CreateTaskActivity : AppCompatActivity() {
     private lateinit var mViewModel: TaskViewModel
+    private lateinit var mTaskModel: TaskModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_task)
@@ -22,9 +26,27 @@ class CreateTaskActivity : AppCompatActivity() {
 
         observe()
 
+        loadData()
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close);
         supportActionBar?.title = getString(R.string.new_task)
+    }
+
+    private fun loadData() {
+        val bundle = intent.extras;
+        if (bundle != null) {
+            mTaskModel = bundle.getSerializable(TaskConstants.BUNDLE.TASK_BUNDLE) as TaskModel
+
+            edit_email.setText(mTaskModel.email)
+            edit_name_task.setText(mTaskModel.title)
+            edit_descricao.setText(mTaskModel.description)
+            /* Carrega tarefa
+            if (this.mTaskId != 0) {
+                button_save.setText(R.string.update_task)
+                mViewModel.load(mTaskId)
+            }*/
+        }
     }
 
     private fun observe() {
@@ -49,7 +71,15 @@ class CreateTaskActivity : AppCompatActivity() {
                 val email = edit_email.text.toString()
                 val taskName = edit_name_task.text.toString()
                 val desc = edit_descricao.text.toString()
-                mViewModel.save(email, taskName, desc)
+
+                val task = TaskModel().apply {
+                    this.id = mTaskModel.id
+                    this.email = email
+                    this.description = desc
+                    this.title = taskName
+                }
+
+                mViewModel.save(task)
                 true
             }
             android.R.id.home -> {

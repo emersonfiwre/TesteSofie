@@ -1,9 +1,9 @@
 package com.emersonfiwre.testesofie.service.model
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.io.Serializable
 
-class TaskModel() {
+class TaskModel() : Serializable {
 
     @SerializedName("_id")
     var id: String = ""

@@ -74,10 +74,65 @@ class TaskRepository(val mContext: Context) : ValidationRepository() {
                 }
 
             }
+
             override fun onFailure(call: Call<TaskCreateModel>, t: Throwable) {
                 t.printStackTrace()
                 Log.e(TAG, t.message.toString())
                 listener.onFailure(mContext.getString(R.string.ERROR_UNEXPECTED))
+            }
+        })
+    }
+
+    fun update(task: TaskModel, listener: APIListener<Boolean>) {
+        // Verificação de internet
+        if (!isConnectionAvailable(mContext)) {
+            listener.onFailure(mContext.getString(R.string.ERROR_INTERNET_CONNECTION))
+            return
+        }
+        val call: Call<TaskCreateModel> = mRemote.update(task.id, task)
+        call.enqueue(object : Callback<TaskCreateModel> {
+            override fun onFailure(call: Call<TaskCreateModel>, t: Throwable) {
+                listener.onFailure(mContext.getString(R.string.ERROR_UNEXPECTED))
+            }
+
+            override fun onResponse(
+                call: Call<TaskCreateModel>,
+                response: Response<TaskCreateModel>
+            ) {
+                val code = response.code()
+                if (fail(code)) {
+                    listener.onFailure(failRespose(response.errorBody()!!.string()))
+                } else {
+                    response.body()?.let { listener.onSuccess(it.success) }
+                }
+            }
+        })
+    }
+
+    fun delete(task: TaskModel, listener: APIListener<Boolean>) {
+
+        // Verificação de internet
+        if (!isConnectionAvailable(mContext)) {
+            listener.onFailure(mContext.getString(R.string.ERROR_INTERNET_CONNECTION))
+            return
+        }
+
+        val call: Call<TaskCreateModel> = mRemote.delete(task.id, task)
+        call.enqueue(object : Callback<TaskCreateModel> {
+            override fun onFailure(call: Call<TaskCreateModel>, t: Throwable) {
+                listener.onFailure(mContext.getString(R.string.ERROR_UNEXPECTED))
+            }
+
+            override fun onResponse(
+                call: Call<TaskCreateModel>,
+                response: Response<TaskCreateModel>
+            ) {
+                val code = response.code()
+                if (fail(code)) {
+                    listener.onFailure(failRespose(response.errorBody()!!.string()))
+                } else {
+                    response.body()?.let { listener.onSuccess(it.success) }
+                }
             }
         })
     }

@@ -17,5 +17,9 @@
     <string name="cancel">cancel</string>
     <string name="tasks_fragment_label">Tasks Fragment</string>
     <string name="create_task_activity">Create Task Activity</string>
+    <string name="sim">Sim</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="remocao_de_tarefa">Remoção de tarefa</string>
+    <string name="remover_tarefa">Remover tarefa?</string>
 
 </resources>

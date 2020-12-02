@@ -14,4 +14,24 @@ interface TaskService {
     fun create(
         @Body body: TaskModel
     ): Call<TaskCreateModel>
+
+    @HTTP(method = "PUT", path = "task/{id}", hasBody = true)
+    fun update(
+        @Path(value = "id", encoded = true) id: String,
+        @Body body: TaskModel
+    ): Call<TaskCreateModel>
+
+    @HTTP(method = "DELETE", path = "task/{id}", hasBody = true)
+    fun delete(
+        @Path(value = "id", encoded = true) id: String,
+        @Body body: TaskModel
+    ): Call<TaskCreateModel>
+
+    @HTTP(method = "PATCH", path = "task/{id}", hasBody = true)
+    fun complete(
+        @Path(value = "id") id: String,
+        @Body body: TaskModel
+    ): Call<TaskCreateModel>
+
+
 }
