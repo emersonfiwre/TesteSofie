@@ -1,6 +1,8 @@
 package com.emersonfiwre.testesofie.service.repository.remote
 
 import com.emersonfiwre.testesofie.service.constants.TaskConstants
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -17,6 +19,8 @@ class RetrofitClient private constructor() {
         private fun getRetrofitInstance(): Retrofit {
             if (!Companion::retrofit.isInitialized) {
                 val httpClient = OkHttpClient.Builder()
+                val gson: Gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+
                 httpClient.addInterceptor(object : Interceptor {
                     override fun intercept(chain: Interceptor.Chain): Response {
                         val request =
@@ -29,7 +33,7 @@ class RetrofitClient private constructor() {
                 })
                 retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(httpClient.build())
                     .build()
             }

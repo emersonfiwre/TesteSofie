@@ -75,7 +75,8 @@ class TasksFragment : Fragment(), TaskListener {
     }
 
     override fun onDeleteClick(id: String) {
-        TODO("Not yet implemented")
+        mViewModel.delete(id)
+        println("id: $id")
     }
 
 }

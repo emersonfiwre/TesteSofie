@@ -3,13 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/Tasksragment">
+    app:startDestination="@id/TasksFragment">
+
+    <activity
+        android:id="@+id/SplashScreenActivity"
+        android:name="com.emersonfiwre.testesofie.view.SplashScreenActivity"
+        android:label="@string/splash_screen_activity"
+        tools:layout="@layout/activity_splash_screen">
+    </activity>
 
     <fragment
-        android:id="@+id/Tasksragment"
+        android:id="@+id/TasksFragment"
         android:name="com.emersonfiwre.testesofie.view.TasksFragment"
         android:label="@string/tasks_fragment_label"
         tools:layout="@layout/fragment_tasks">
     </fragment>
+
+    <activity
+        android:id="@+id/CreateTaskActivity"
+        android:name="com.emersonfiwre.testesofie.view.CreateTaskActivity"
+        android:label="@string/create_task_activity"
+        tools:layout="@layout/activity_create_task">
+    </activity>
 
 </navigation>

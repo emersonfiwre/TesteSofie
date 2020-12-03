@@ -37,7 +37,6 @@ class CreateTaskActivity : AppCompatActivity() {
         val bundle = intent.extras;
         if (bundle != null) {
             mTaskModel = bundle.getSerializable(TaskConstants.BUNDLE.TASK_BUNDLE) as TaskModel
-
             edit_email.setText(mTaskModel.email)
             edit_name_task.setText(mTaskModel.title)
             edit_descricao.setText(mTaskModel.description)
@@ -46,13 +45,21 @@ class CreateTaskActivity : AppCompatActivity() {
                 button_save.setText(R.string.update_task)
                 mViewModel.load(mTaskId)
             }*/
+        } else {
+            mTaskModel = TaskModel().apply {
+                id = ""
+            }
         }
     }
 
     private fun observe() {
         mViewModel.validation.observe(this, Observer {
             if (it.success()) {
-                Toast.makeText(this, "Tarefa adicionada com sucesso", Toast.LENGTH_SHORT).show()
+                if (mTaskModel.id.isEmpty()) {
+                    Toast.makeText(this, getString(R.string.add_task_success), Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, getString(R.string.update_task_success), Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(this, it.failure(), Toast.LENGTH_SHORT).show()
             }

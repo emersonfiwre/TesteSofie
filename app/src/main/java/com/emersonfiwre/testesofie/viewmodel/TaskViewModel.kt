@@ -9,6 +9,8 @@ import com.emersonfiwre.testesofie.service.listener.APIListener
 import com.emersonfiwre.testesofie.service.listener.ValidationListener
 import com.emersonfiwre.testesofie.service.model.TaskModel
 import com.emersonfiwre.testesofie.service.repository.TaskRepository
+import java.text.SimpleDateFormat
+import java.util.*
 
 class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -26,7 +28,10 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
     fun list() {
         mRepository.listTasks(object : APIListener<List<TaskModel>> {
             override fun onSuccess(result: List<TaskModel>) {
-                mTaskList.value = result
+                val local = Locale("pt", "BR")
+                mTaskList.value = result.sortedByDescending {
+                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", local).parse(it.whenDate)
+                }
             }
 
             override fun onFailure(message: String) {
@@ -59,6 +64,7 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
             mRepository.create(task, object : APIListener<Boolean> {
                 override fun onSuccess(result: Boolean) {
                     mValidation.value = ValidationListener()
+                    //list()
                 }
 
                 override fun onFailure(message: String) {
@@ -78,5 +84,19 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
             })
 
         }
+    }
+
+    fun delete(id: String) {
+        mRepository.delete(id, object : APIListener<Boolean> {
+            override fun onSuccess(result: Boolean) {
+                mValidation.value = ValidationListener()
+                //list()
+            }
+
+            override fun onFailure(message: String) {
+                mValidation.value = ValidationListener(message)
+            }
+
+        })
     }
 }

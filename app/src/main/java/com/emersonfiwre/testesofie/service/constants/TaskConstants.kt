@@ -4,6 +4,7 @@ class TaskConstants private constructor() {
     object HTTP {
         const val SUCCESS = 200
         const val CREATED = 201
+        const val AUTHENTICATION = 403
     }
 
     object HEADER {

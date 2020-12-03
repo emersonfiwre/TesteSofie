@@ -31,10 +31,12 @@ class TaskRepository(val mContext: Context) : ValidationRepository() {
         call.enqueue(object : Callback<TaskListModel> {
             override fun onResponse(call: Call<TaskListModel>, response: Response<TaskListModel>) {
                 val code = response.code()
-                if (code != TaskConstants.HTTP.SUCCESS) {
-                    val validation =
-                        Gson().fromJson(response.errorBody()!!.string(), String::class.java)
-                    listener.onFailure(validation)
+                if (fail(code)) {
+                    if (isAuth(code)) {
+                        listener.onFailure(mContext.getString(R.string.MISSING_AUTHENTICATION))
+                    }
+                    Log.e(TAG, failRespose(response.errorBody()!!.string()))
+                    listener.onFailure(mContext.getString(R.string.ERROR_LOAD_TASK))
                 }
                 response.body()?.let { listener.onSuccess(it.tasks) }
             }
@@ -60,9 +62,10 @@ class TaskRepository(val mContext: Context) : ValidationRepository() {
             ) {
                 val code = response.code()
                 if (code != TaskConstants.HTTP.CREATED) {
-                    val validation =
-                        Gson().fromJson(response.errorBody()!!.string(), String::class.java)
-                    Log.e(TAG, validation)
+                    if (isAuth(code)) {
+                        listener.onFailure(mContext.getString(R.string.MISSING_AUTHENTICATION))
+                    }
+                    Log.e(TAG, failRespose(response.errorBody()!!.string()))
                     listener.onFailure(mContext.getString(R.string.ERROR_CREATED))
                 }
                 response.body()?.let {
@@ -91,48 +94,59 @@ class TaskRepository(val mContext: Context) : ValidationRepository() {
         }
         val call: Call<TaskCreateModel> = mRemote.update(task.id, task)
         call.enqueue(object : Callback<TaskCreateModel> {
-            override fun onFailure(call: Call<TaskCreateModel>, t: Throwable) {
-                listener.onFailure(mContext.getString(R.string.ERROR_UNEXPECTED))
-            }
-
             override fun onResponse(
                 call: Call<TaskCreateModel>,
                 response: Response<TaskCreateModel>
             ) {
                 val code = response.code()
                 if (fail(code)) {
-                    listener.onFailure(failRespose(response.errorBody()!!.string()))
+                    //Verificando se o usário está autenticado
+                    if (isAuth(code)) {
+                        listener.onFailure(mContext.getString(R.string.MISSING_AUTHENTICATION))
+                    }
+                    Log.e(TAG, failRespose(response.errorBody()!!.string()))
+                    listener.onFailure(mContext.getString(R.string.ERROR_UPDATE))
                 } else {
                     response.body()?.let { listener.onSuccess(it.success) }
                 }
             }
+
+            override fun onFailure(call: Call<TaskCreateModel>, t: Throwable) {
+                Log.e(TAG, t.message.toString())
+                listener.onFailure(mContext.getString(R.string.ERROR_UNEXPECTED))
+            }
         })
+
     }
 
-    fun delete(task: TaskModel, listener: APIListener<Boolean>) {
-
+    fun delete(id: String, listener: APIListener<Boolean>) {
         // Verificação de internet
         if (!isConnectionAvailable(mContext)) {
             listener.onFailure(mContext.getString(R.string.ERROR_INTERNET_CONNECTION))
             return
         }
-
-        val call: Call<TaskCreateModel> = mRemote.delete(task.id, task)
+        val call: Call<TaskCreateModel> = mRemote.delete(id)
         call.enqueue(object : Callback<TaskCreateModel> {
-            override fun onFailure(call: Call<TaskCreateModel>, t: Throwable) {
-                listener.onFailure(mContext.getString(R.string.ERROR_UNEXPECTED))
-            }
-
             override fun onResponse(
                 call: Call<TaskCreateModel>,
                 response: Response<TaskCreateModel>
             ) {
                 val code = response.code()
                 if (fail(code)) {
-                    listener.onFailure(failRespose(response.errorBody()!!.string()))
+                    //Verificando se o usário está autenticado
+                    if (isAuth(code)) {
+                        listener.onFailure(mContext.getString(R.string.MISSING_AUTHENTICATION))
+                    }
+                    Log.e(TAG, failRespose(response.errorBody()!!.string()))
+                    listener.onFailure(mContext.getString(R.string.ERROR_DELETE))
                 } else {
                     response.body()?.let { listener.onSuccess(it.success) }
                 }
+            }
+
+            override fun onFailure(call: Call<TaskCreateModel>, t: Throwable) {
+                Log.e(TAG, t.message.toString())
+                listener.onFailure(mContext.getString(R.string.ERROR_UNEXPECTED))
             }
         })
     }

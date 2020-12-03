@@ -23,8 +23,7 @@ interface TaskService {
 
     @HTTP(method = "DELETE", path = "task/{id}", hasBody = true)
     fun delete(
-        @Path(value = "id", encoded = true) id: String,
-        @Body body: TaskModel
+        @Path(value = "id", encoded = true) id: String
     ): Call<TaskCreateModel>
 
     @HTTP(method = "PATCH", path = "task/{id}", hasBody = true)

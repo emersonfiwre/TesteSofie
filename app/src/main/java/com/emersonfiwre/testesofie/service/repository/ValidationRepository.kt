@@ -5,15 +5,18 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import com.emersonfiwre.testesofie.service.constants.TaskConstants
+import com.emersonfiwre.testesofie.service.model.APIError
 import com.google.gson.Gson
 
 open class ValidationRepository {
 
     fun fail(code: Int) = code != TaskConstants.HTTP.SUCCESS
+    fun isAuth(code: Int) = code == TaskConstants.HTTP.AUTHENTICATION
 
     fun failRespose(respose: String): String {
-        return Gson().fromJson(respose, String::class.java)
+        return Gson().fromJson(respose, APIError::class.java).message
     }
+
 
     /**
      * Verifica se existe conexão com internet
