@@ -9,6 +9,7 @@ import com.emersonfiwre.testesofie.service.listener.APIListener
 import com.emersonfiwre.testesofie.service.listener.ValidationListener
 import com.emersonfiwre.testesofie.service.model.TaskModel
 import com.emersonfiwre.testesofie.service.repository.TaskRepository
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,10 +29,15 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
     fun list() {
         mRepository.listTasks(object : APIListener<List<TaskModel>> {
             override fun onSuccess(result: List<TaskModel>) {
-                val local = Locale("pt", "BR")
+                /*Erro, pois alguns desenvolvedores estão colocando a "changed" vazia, sendo que quando você faz
+                * o update na task a api troca a "when" por "changed" automaticamente.Ai para fazer o SimpleDateFormat para ordernar
+                * pela data mais recente não funciona, pois ficar testando cada item da lista seria um consumo de recursos
+                * desnecessário. */
+                /*val local = Locale("pt", "BR")
                 mTaskList.value = result.sortedByDescending {
                     SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", local).parse(it.whenDate)
-                }
+                }*/
+                mTaskList.value = result
             }
 
             override fun onFailure(message: String) {
